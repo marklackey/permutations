@@ -22,11 +22,9 @@ public class Main {
         if (len == 0) {
             permutations.add(used);
         } else {
-            for (int i = 0; i < len; i++) {
-                permute(
-                    remaining.substring(0, i) + remaining.substring(Math.min((i + 1), len)),
-                    used + remaining.substring(i, i + 1)
-                );
+            for (int curIdx = 0; curIdx < len; curIdx++) {
+                permute(remaining.substring(0, curIdx) + remaining.substring(Math.min((curIdx + 1), len)),
+                    used + remaining.substring(curIdx, curIdx + 1));
             }
         }
     }
@@ -35,10 +33,23 @@ public class Main {
         if (remaining.length == 0) {
             permutations.add(new String(used));
         } else {
-            for (int i = 0; i < remaining.length; i++) {
-                permuteArray(buildNewRemaining(remaining, i), buildNewUsed(used, remaining[i]));
+            for (int curIdx = 0; curIdx < remaining.length; curIdx++) {
+                permuteArray(buildNewRemaining(remaining, curIdx), buildNewUsed(used, remaining[curIdx]));
             }
         }
+    }
+
+    private static char[] buildNewRemaining(char[] remaining, int curIdx) {
+        char[] newRemaining = new char[remaining.length - 1];
+        int remainIdx;
+        for (remainIdx = 0; remainIdx < curIdx; remainIdx++) {
+            newRemaining[remainIdx] = remaining[remainIdx];
+        }
+        //skip curIdx
+        for (remainIdx = curIdx + 1; remainIdx < remaining.length; remainIdx++) {
+            newRemaining[remainIdx - 1] = remaining[remainIdx];
+        }
+        return newRemaining;
     }
 
     private static char[] buildNewUsed(char[] used, char c) {
@@ -46,17 +57,6 @@ public class Main {
         System.arraycopy(used, 0, newUsed, 0, used.length);
         newUsed[newUsed.length - 1] = c;
         return newUsed;
-    }
-
-    private static char[] buildNewRemaining(char[] remaining, int i) {
-        char[] newRemaining = new char[remaining.length - 1];
-        for (int j = 0; j < i; j++) {
-            newRemaining[j] = remaining[j];
-        }
-        for (int k = i + 1; k < remaining.length; k++) {
-            newRemaining[k - 1] = remaining[k];
-        }
-        return newRemaining;
     }
 
     private static void printSetSorted() {
